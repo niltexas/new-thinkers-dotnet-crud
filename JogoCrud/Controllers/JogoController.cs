@@ -1,5 +1,8 @@
 ﻿using DotNetCrud.Entities;
+using JogoCrud.DTO.AdicionarJogo;
+using JogoCrud.DTO.DeletarJogo;
 using JogoCrud.Services;
+using JogoCrud.UseCase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,12 +19,17 @@ namespace JogoCrud.Controllers
     {
         private readonly ILogger<JogoController> _logger;
         private readonly IJogoService _jogo;
+        private readonly IAdicionarJogoUseCase _adicionarJogoUseCase;
+        private readonly IDeletarJogoUseCase _deletarJogoUseCase;
 
-        public JogoController(ILogger<JogoController> logger, IJogoService jogo)
+        public JogoController(ILogger<JogoController> logger, IJogoService jogo, IAdicionarJogoUseCase adicionarJogoUseCase, IDeletarJogoUseCase deletarJogoUseCase)
         {
             _logger = logger;
             _jogo = jogo;
+            _adicionarJogoUseCase = adicionarJogoUseCase;
+            _deletarJogoUseCase = deletarJogoUseCase;
         }
+
 
         [HttpGet]
         public IActionResult TodosJogos()
@@ -38,9 +46,9 @@ namespace JogoCrud.Controllers
 
         [HttpPost]
 
-        public IActionResult jogoAdd([FromBody] Jogo novoJogo)
+        public IActionResult jogoAdd([FromBody] AdicionarJogoRequest novoJogo)
         {
-            return Ok(_jogo.AdicionarJogo(novoJogo));
+            return Ok(_adicionarJogoUseCase.Executar(novoJogo));
         }
 
         [HttpPut]
@@ -51,9 +59,11 @@ namespace JogoCrud.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult produtoDelete(int id)
+        public IActionResult jogoDelete(int id)
         {
-            return Ok(_jogo.DeletarJogo(id));
+            var request = new DeletarJogoRequest();
+            request.id = id;
+            return Ok(_deletarJogoUseCase.Executar(request));
         }
     }
 

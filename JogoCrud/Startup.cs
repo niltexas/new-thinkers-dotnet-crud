@@ -1,5 +1,9 @@
 using DotNetCrud.Context;
+using JogoCrud.Adapters;
+using JogoCrud.Bordas.Adapter;
+using JogoCrud.Repositorios;
 using JogoCrud.Services;
+using JogoCrud.UseCase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +38,15 @@ namespace JogoCrud
             (Configuration.GetConnectionString("urlJogo")));
 
             services.AddScoped<IJogoService, JogoService>();
+
+            services.AddScoped<IAdicionarJogoUseCase, AdicionarJogoUseCase>();
+            services.AddScoped<IAtualizarJogoUseCase, AtualizarJogoUseCase>();
+            services.AddScoped<IDeletarJogoUseCase, DeletarJogoUseCase>();
+            services.AddScoped<IRetornarJogoPorIdUseCase, RetornarJogoPorIdUseCase>();
+            services.AddScoped<IRetornarListaJogoUseCase, RetornarListaJogoUseCase>();
+
+            services.AddScoped<IRepositorioJogo, RepositorioJogo>();
+            services.AddScoped<IAdicionarJogoAdapter, AdicionarJogoAdapter>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
